@@ -1,6 +1,6 @@
 package app;
 
-public class Cuenta {
+public class Cuenta implements Valores{
 	
 	// --- ATRIBUTOS CUENTA  ---
 	private static int contadorId = 1;
@@ -16,6 +16,7 @@ public class Cuenta {
 	}
 	
 	// --- COMPORTAMIENTO CONSULTAS ---
+	
 	public int getId() {
 		return id;
 	}

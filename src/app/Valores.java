@@ -1,7 +1,7 @@
 package app;
 
 public interface Valores {
-	public static final int CLP = 1;
-	public static final int USD = 0;
-	int valor = 950;
+	int estadoCLP = 1;
+	int estadoUSD = 0;
+	int valorUSD = 950;
 }

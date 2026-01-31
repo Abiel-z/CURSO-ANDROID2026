@@ -125,6 +125,8 @@ public class Main {
 									System.out.println("|" + c.getId() + " 		| $" + c.getSaldo() + "	|" +  c.getMoneda() + "	|");
 								}
 							}
+							double NUMERO = 100 * Valores.valorUSD;
+							System.out.print(NUMERO);
 							System.out.println("Presione c para continuar...");
 							scan.next();
 						}
