@@ -26,13 +26,15 @@ public class Main {
 			SaltoLinea(20);
 			System.out.println("|	--- MENÚ PRINCIPAL ---		|");
 			System.out.println("|	1 .- ACCEDER A SU BILLETERA	|");
-			System.out.println("|	2 .- CREAR UN USUARIO		|");
+			System.out.println("|	2 .- CREAR UNA CUENTA NUEVA	|");
 			System.out.println("|	0 .- SALIR DE LA APLICACION	|");
 			System.out.print("SELECCIONE UNA OPCION : ");
 			opcionAcceso = scan.nextInt();
 
 			if (opcionAcceso == 0) {
-				System.out.print("Cerrando aplicación");
+				System.out.println("Cerrando aplicación");
+				System.out.println("Presione c para continuar...");
+				scan.next();
 				break;
 			}
 			// --- INGRESO A LA APLICACIÓN SOLICITANDO CREDENCIALES ---
@@ -61,9 +63,9 @@ public class Main {
 						
 						
 						// --- MENÚ PRINCIPAL USUARIO ---
-						System.out.println("|	---- USUARIO ACTUAL :" + usuario + " ---	|");
-						System.out.println("|	1 .- CREAR NUEVA BILLETERA	|");
-						System.out.println("|	2 .- CONSULTA BILLETERAS	|");
+						System.out.println("|	---- USUARIO ACTUAL : " + usuario + " ---	|");
+						System.out.println("|	1 .- CREAR NUEVA CUENTA		|");
+						System.out.println("|	2 .- CONSULTA CUENTAS		|");
 						System.out.println("|	3 .- DEPOSITO A CUENTA		|");
 						System.out.println("|	4 .- RETIRO A CUENTA		|");
 						System.out.println("|	0 .- CERRAR SESIÓN		|");
@@ -85,7 +87,7 @@ public class Main {
 							
 							SaltoLinea(20);
 							
-							System.out.println("| --- CREACION DE BILLETERA --- |");
+							System.out.println("| --- CREACION DE CUENTA NUEVA --- |");
 							System.out.println("En que moneda desea su cuenta");
 							System.out.println("1 .- PESO CHILENO (CLP)");
 							System.out.println("2 .- DOLAR ESTADOUNIDENSE (USD)");
@@ -105,7 +107,7 @@ public class Main {
 								SaltoLinea(20);
 								
 								clienteActual.agregarCuenta(cuenta);
-								System.out.println("Cuenta creada con ID: " + cuenta.getId());
+								System.out.println("Cuenta creada con ID : " + cuenta.getId());
 								System.out.println("Presione c para continuar...");
 								scan.next();
 							}
@@ -115,30 +117,44 @@ public class Main {
 						if (opcionLogged == 2) {
 							
 							SaltoLinea(20);
-							
-							if (cuentas.isEmpty()) {
-								System.out.println("NO EXISTEN BILLETERAS REGISTRADAS");
-							} else {
-								System.out.println("|	---	BILLETERAS ACTUALES	---	|");
-								System.out.println("|N° CUENTA	|SALDO	| MONEDA	|");
-								for (Cuenta c : cuentas) {
-									System.out.println("|" + c.getId() + " 		| $" + c.getSaldo() + "	|" +  c.getMoneda() + "	|");
+							while(true) {
+								SaltoLinea(20);
+								if (cuentas.isEmpty()) {
+									System.out.println("NO EXISTEN BILLETERAS REGISTRADAS");
+									System.out.println("Presione c para continuar...");
+									scan.next();
+								} else {
+									System.out.println("|	---	BILLETERAS ACTUALES	---	|");
+									System.out.println("|ID CUENTA	|SALDO				|");							
+									for (Cuenta c : cuentas) {
+										System.out.printf("| %-6d 	| $%10.2f %-4s 		|%n",
+										        c.getId(),
+										        c.getSaldo(),
+										        c.getMoneda());
+									}
+									System.out.println("");
+									System.out.println("1 .- CAMBIAR DIVISAS");
+									System.out.println("0 .- VOLVER A MENÚ PRINCIPAL");
+									int cambio = scan.nextInt();
+									if (cambio == 1) {
+										for (Cuenta c : cuentas) {
+											c.cambiarMoneda();
+											continue;
+											
+										} 
+									} else {
+										break;
+									}
 								}
 							}
-							double NUMERO = 100 * Valores.valorUSD;
-							System.out.print(NUMERO);
-							System.out.println("Presione c para continuar...");
-							scan.next();
 						}
 						
 						// --- OPCION DEPOSITO A CUENTAS ---
 						if (opcionLogged == 3) {
 							
 							SaltoLinea(20);
-							
-							System.out.print("INGRESE EL ID DE SU CUENTA");
+							System.out.print("INGRESE EL ID DE SU CUENTA : ");
 							int solicitudCuentaId = scan.nextInt();
-							
 							Cuenta cuentaDestino = null;
 							
 							// --- REVISAR SI LA CUENTA EXISTE ---
@@ -150,28 +166,64 @@ public class Main {
 							}
 								// --- SI TRUE PREGUNTAR CUANTO DESEA DEPOSITAR --- 
 							if (cuentaDestino != null) {
-								System.out.print("MONTO A DEPOSITAR : ");
-								double monto = scan.nextDouble();
-									
-								if (monto > 0 ) {
-									cuentaDestino.depositarMonto(monto);
-									System.out.println("MONTO DEPOSITADO");
-									System.out.println("NUEVO SALDO : $" + cuentaDestino.getSaldo());
-									}
-									else {
-										System.out.println("EL MONTO DEBE SER MAYOR QUE 0");
-									}
-								}
-								// --- SI FALSE DEVOLVER "CUENTA NO EXISTE" --- 
-								else {
-									System.out.println("NO SE ENCUENTRA UNA CUENTA CON ESE ID");
-								}
+
+							    while (true) {
+							    	
+							        System.out.println("1 .- DEPOSITAR CLP");
+							        System.out.println("2 .- DEPOSITAR USD");
+							        System.out.println("0 .- VOLVER AL MENÚ PRINCIPAL");
+
+							        int eleccion = scan.nextInt();
+
+							        if (eleccion == 0) {
+							            break;
+							        }
+							        SaltoLinea(20);
+							        System.out.print("MONTO A DEPOSITAR : ");
+							        double monto = scan.nextDouble();
+
+							        if (monto <= 0) {
+							            System.out.println("EL MONTO DEBE SER MAYOR QUE 0");
+							            continue;
+							        }
+
+							        int monedaElegida = -1;
+
+							        if (eleccion == 1) monedaElegida = Valores.estadoCLP;
+							        else if (eleccion == 2) monedaElegida = Valores.estadoUSD;
+							        else {
+							            System.out.println("OPCIÓN INVÁLIDA");
+							            continue;
+							        }
+
+							        if (cuentaDestino.getMonedaInt() != monedaElegida) {
+							            System.out.println("LA MONEDA DE LA CUENTA NO COINCIDE");
+							            continue;
+							        }
+
+							        cuentaDestino.depositarMonto(monto);
+							        break;
+							        
+							    }
+							    SaltoLinea(20);
+						        scan.nextLine();
+							    System.out.println("MONTO DEPOSITADO");
+						        System.out.println("NUEVO SALDO : $" + cuentaDestino.getSaldo());
+						        System.out.println("  ");
+						        System.out.println("Presione c para continuar...");
+						        scan.nextLine();
+						        
 							}
-						
+							else {
+							    System.out.println("NO SE ENCUENTRA UNA CUENTA CON ESE ID");
+							    System.out.println("Presione c para continuar...");
+							    scan.next();
+							}
+						}
 						// --- OPCION RETIRO DE CUENTAS ---
 						if (opcionLogged == 4) {
 							
-							System.out.print("INGRESE EL ID DE LA CUENTA");
+							System.out.print("INGRESE EL ID DE LA CUENTA : ");
 							int solicitudCuentaId = scan.nextInt();
 							
 							Cuenta cuentaDestino = null;
@@ -186,9 +238,6 @@ public class Main {
 							
 							// SI TRUE PREGUNTAR CUANTO DESEA DEPOSITAR
 							if (cuentaDestino != null) {
-								
-								// SI FALSE DEVOLVER "NO TIENE DINERO SUFICIENTE" 
-								// SI TRUE LLAMAR A Cliente.retiroCuenta
 							
 								System.out.print("MONTO A RETIRAR : ");
 								double monto = scan.nextDouble();
@@ -229,26 +278,43 @@ public class Main {
 			if (opcionAcceso == 2) {
 				// --- SISTEMA DE CREACION DE CUENTA EN LA APLICACION ---
 				SaltoLinea(10);
-
-				System.out.println("Sistema crear cuentas");
-				System.out.println(" ------------------- ");
-
-				System.out.println("|El usuario debe tener: |");
-				System.out.println("|Minimo 6 caracteres    |");
-				System.out.println("|Maximo 10 caracteres   |");
-				System.out.print("INGRESE UN USUARIO : ");
-				String nuevoUsuario = scan.next();
-
-				SaltoLinea(20);
-
-				System.out.println("Sistema crear cuentas");
-				System.out.println("|Su clave debe tener:   |");
-				System.out.println("|Minimo 4 caracteres    |");
-				System.out.println("|Maximo 6 caracteres    |");
-				System.out.print("INGRESE UNA CONTRASEÑA: ");
-				String nuevaContrasena = scan.next();
+				String nuevoUsuario;
+				String nuevaContrasena;
 				
-				SaltoLinea(20);
+				// LOOP CREACION DE CUENTA DE ACCESO
+				
+				while (true) {
+					System.out.println("|El usuario debe tener: |");
+					System.out.println("|Minimo 4 caracteres    |");
+					System.out.println("|Maximo 6 caracteres   |");
+					System.out.print("INGRESE UN USUARIO : ");
+					nuevoUsuario = scan.next();
+					if (nuevoUsuario.length() > 6 || nuevoUsuario.length() < 4) {
+						System.out.println("EL USUARIO NO CUMPLE CON LOS REQUERIMIENTOS");
+						System.out.println("Presione c para continuar...");
+						scan.next();
+						continue;					
+					} else {
+						break;
+					}
+				}
+				
+				while (true) {
+					
+					System.out.println("|Su clave debe tener:   |");
+					System.out.println("|Minimo 4 caracteres    |");
+					System.out.println("|Maximo 6 caracteres    |");
+					System.out.print("INGRESE UNA CONTRASEÑA: ");
+					nuevaContrasena = scan.next();
+					if (nuevaContrasena.length() > 6 || nuevaContrasena.length() < 4) {
+						System.out.println("LA CONTRASEÑA NO CUMPLE CON LOS REQUERIMIENTOS");
+						System.out.println("Presione c para continuar...");
+						scan.next();
+						continue;					
+					} else {
+						break;
+					}
+				}
 				
 				//REVISAR SI EXISTE ALGUN USUARIO CON EL USUARIO INGRESADO
 				boolean existeUsuario;
@@ -274,11 +340,16 @@ public class Main {
 	
 				}
 				
+					
+					
+					
+				}									
+				
+				
+				
 				
 			}
-		}
-
 		scan.close();
+		}
 	}
 
-}

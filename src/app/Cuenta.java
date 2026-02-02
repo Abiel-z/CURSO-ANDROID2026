@@ -25,15 +25,31 @@ public class Cuenta implements Valores{
 	}
 	
 	public void setMoneda(int var) {
-		if (var == 1)
-			this.moneda = 1;
-			else this.moneda = 0;
+		if (var == Valores.estadoCLP)
+			this.moneda = Valores.estadoCLP;
+			else this.moneda = Valores.estadoUSD;
+	}
+	
+	public int getMonedaInt() {
+		if (moneda == Valores.estadoCLP)
+			return 1;
+			else return 0;
 	}
 	
 	public String getMoneda() {
-		if (moneda == 1)
+		if (moneda == Valores.estadoCLP)
 			return "CLP";
 			else return "USD";
+	}
+	
+	public void cambiarMoneda() {
+		if (moneda == Valores.estadoCLP) {
+			saldo = saldo / Valores.valorUSD;
+			moneda = Valores.valorUSD;
+		} else {
+			saldo = saldo * Valores.valorUSD;
+			moneda = Valores.estadoCLP;
+		}
 	}
 	
 	
